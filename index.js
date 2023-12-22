@@ -93,6 +93,33 @@ async function run() {
         res.send(result)
   
       })
+
+      // update 
+
+      app.get("/ownTask/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await taskCollection.findOne(query);
+        res.send(result);
+      });
+  
+      app.put("/tasks/:id", async (req, res) => {
+        const item = req.body;
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id) };
+        const updatedDoc = {
+          $set: {
+            taskTitle: item.taskTitle,
+            taskPriority: item.taskPriority,
+            taskDeadline: item.taskDeadline,
+            taskDescription: item.taskDescription,
+          },
+        };
+        const result = await taskCollection.updateOne(filter, updatedDoc);
+        res.send(result);
+      });
+
+
     
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
@@ -100,7 +127,7 @@ async function run() {
    
   }
 }
-run().catch(console.dir);
+run().catch(console.dir)
 
 
 app.get('/',(req , res) => {
